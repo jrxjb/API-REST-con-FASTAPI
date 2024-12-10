@@ -1,0 +1,34 @@
+venv/
+
+
+# Directorios del entorno virtual
+venv/
+.venv/
+
+# Archivos de configuración del entorno
+.env
+
+# Archivos de caché y compilación
+__pycache__/
+*.py[cod]
+
+# Archivos de log
+*.log
+
+# Archivos de configuración específicos de Windows
+Thumbs.db
+Desktop.ini
+
+# Archivos específicos del editor
+.idea/
+.vscode/
+
+# Archivos de migraciones (si usas alguna herramienta de migraciones)
+alembic/
+migrations/
+
+# Archivos de configuración y carpetas de Docker (si usas Docker)
+docker-compose.override.yml
+
+# Otros archivos y carpetas específicas de tu entorno o editor
+.DS_Store
