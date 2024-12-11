@@ -1,6 +1,6 @@
 from typing import List,Any,Dict
 
-def userEntity(item: Dict[str, Any]) -> Dict[str, Any]:
+def userEntity(item)-> dict:
     return{
         "id":str(item["_id"]),
         "name":item["name"],
@@ -11,5 +11,18 @@ def userEntity(item: Dict[str, Any]) -> Dict[str, Any]:
         "active":item["active"]
     }
 
-def usersEntity(entity: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def usersEntity(entity
+) -> list:
     return[userEntity(item) for item in entity]
+
+
+
+def userEntityUpdate(item) -> list:
+    return{
+        "id":str(item["_id"]),
+        "name":item["name"],
+        "lastname":item["lastname"],
+        "email":item["email"],
+        "password":item["password"],
+        "active":item["active"]
+    }
