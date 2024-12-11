@@ -31,6 +31,7 @@ sniffio==1.3.1
 starlette==0.41.3
 typing_extensions==4.12.2
 uvicorn==0.32.1
+```
 
 
 ## Configuración de Variables de Entorno
@@ -55,6 +56,7 @@ PEPPER="your_pepper_here"
 MONGO_URL="your_mongo_url_here"
 DATABASE_NAME="your_database_name_here"
 COLLECTION_NAME="your_collection_name_here"
+```
 
 
 
