@@ -9,10 +9,9 @@ load_dotenv()
 MONGO_URL = os.getenv("MONGO_URL")
 DATABASE_NAME = os.getenv("DATABASE_NAME")
 COLLECTION_NAME = os.getenv("COLLECTION_NAME")
-
+COLLECTION_ITEM = os.getenv("COLLECTION_ITEM")
 # Crear la conexión a MongoDB utilizando las variables de entorno
 conn = MongoClient(MONGO_URL)
 db = conn[DATABASE_NAME]
 users_collection = db[COLLECTION_NAME]
-
-# Ahora puedes usar `users_collection` en tu aplicación
+item_collection = db[COLLECTION_ITEM]
