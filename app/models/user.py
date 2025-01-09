@@ -6,6 +6,7 @@ class userCreate(BaseModel):
     lastname:str
     email: str
     password: str
+
     
 class userDB(BaseModel):
     id:str
@@ -16,6 +17,7 @@ class userDB(BaseModel):
     created:str
     updated:str
     active: bool
+    is_admin: bool
 
 class userOut(BaseModel):
     id:str
@@ -25,3 +27,12 @@ class userOut(BaseModel):
     created:str
     updated:str
     active: bool
+    is_admin: bool
+
+
+class userAdmin(BaseModel):
+    name: str
+    lastname:str
+    email: str
+    password: str
+    is_admin: bool

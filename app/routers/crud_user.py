@@ -19,7 +19,7 @@ def find_user(id):
 
 PEPPER = os.getenv("PEPPER")
 
-
+ 
 @user.post('/users',tags=["users"])
 async def create_user(user:userCreate):
     try:
@@ -28,6 +28,7 @@ async def create_user(user:userCreate):
         new_user['created'] = datetime.utcnow()
         new_user['updated'] = datetime.utcnow()
         new_user['active']  = True
+        new_user['is_admin'] = False
         id = users_collection.insert_one(new_user).inserted_id
         user = users_collection.find_one({"_id":ObjectId(id)})
         return userEntity(user)
@@ -54,15 +55,6 @@ async def delete_one_user_bool(id:str):
     return userEntity(user)
 
 
-"""
-@user.delete('/user{id}',tags=["users"])
-async def delete_one_user(id:str):
-    result = users_collection.delete_one({"_id":ObjectId(id)})
-    if result.deleted_count ==  True :
-     return Response(status_code=204)
-    raise HTTPException(status_code=404,detail="Error")
-"""
-
 @user.put('/user/{id}',tags=["users"])
 async def update_one_user(id:str,user:userCreate):
     user = user.dict()
@@ -71,7 +63,13 @@ async def update_one_user(id:str,user:userCreate):
     return userEntity(user)
 
 
-
-
+"""
+@user.delete('/user{id}',tags=["users"])
+async def delete_one_user(id:str):
+    result = users_collection.delete_one({"_id":ObjectId(id)})
+    if result.deleted_count ==  True :
+     return Response(status_code=204)
+    raise HTTPException(status_code=404,detail="Error")
+"""
 
 #uvicorn main:app --reload

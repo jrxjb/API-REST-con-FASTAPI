@@ -8,7 +8,8 @@ def userEntity(item)-> dict:
         "email":item["email"],
         "created":item["created"].isoformat(),
         "updated":item["updated"].isoformat(),
-        "active":item["active"]
+        "active":item["active"],
+        "is_admin":item["is_admin"]
     }
 
 def usersEntity(entity
@@ -24,5 +25,6 @@ def userEntityUpdate(item) -> list:
         "lastname":item["lastname"],
         "email":item["email"],
         "password":item["password"],
-        "active":item["active"]
+        "active":item["active"],
+        "is_admin":item["is_admin"]
     }
