@@ -12,9 +12,7 @@ def itemAdminEntity(item)->dict:
     }
 
 def itemADminEntityAll(entity) -> list:
-    return[itemAdminEntity(item) for item in entity]
-
-
+    return[itemAdminEntity(item) for item in entity if item["deleted"]]
 
 
 def itemUserEntity(item)->dict:

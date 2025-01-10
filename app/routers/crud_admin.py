@@ -1,11 +1,10 @@
 from fastapi import APIRouter, Response, HTTPException, Depends, Form
 from typing import Annotated
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from models.user import userAdmin
+from models.user import userAdmin, userOut
 from DataBase.DataBase import users_collection
 from schemas.user import userEntity, usersEntity
 from datetime import datetime
-from fastapi.encoders import jsonable_encoder
 from bson import ObjectId
 from passlib.hash import bcrypt
 from jose import jwt
@@ -78,12 +77,12 @@ async def startup_event():
 
 #admin Create (POST)
 
-def admin_required(current_user: dict = Depends(decode_token)):
+def admin_required(current_user: dict = Depends(decode_token),tags=["admin"]):
     if current_user.get("is_admin") != True:
         raise HTTPException(status_code=403, detail="Denegated Access")
     return current_user
 
-@admin.post('/create_admin',tags=["users"])
+@admin.post('/create_admin',tags=["admin"])
 async def create_admin (user:userAdmin, current_user:dict = Depends(admin_required)):
     try:
         new_user = user.dict()
@@ -91,6 +90,7 @@ async def create_admin (user:userAdmin, current_user:dict = Depends(admin_requir
         new_user['created'] = datetime.utcnow()
         new_user['updated'] = datetime.utcnow()
         new_user['active']  = True
+        new_user['is_admin'] = True
         id = users_collection.insert_one(new_user).inserted_id
         user = users_collection.find_one({"_id":ObjectId(id)})
         return userEntity(user)
@@ -98,6 +98,20 @@ async def create_admin (user:userAdmin, current_user:dict = Depends(admin_requir
         raise HTTPException(status_code=500, detail=str(e))
     
 
+@admin.get('/get_admins',response_model=list[userOut],tags=["admin"])
+async def find_all_admin(current_user:dict = Depends(admin_required)):
+    return usersEntity(users_collection.find({"is_admin":True}))
+    
 
 
- 
+
+@admin.delete('/delete_admin{id}',tags=["admin"])
+async def delete_admin(id:str,current_user:dict = Depends(admin_required)):
+    user = find_user(id)
+    if user["is_admin"] != False:
+        raise HTTPException(status_code=403, detail="inactive admin")
+    user["active"] = False
+    user['updated'] = datetime.utcnow()
+    user = users_collection.find_one_and_update({"_id":ObjectId(id)},{"$set":dict(user)})
+    return userEntity(user)
+    

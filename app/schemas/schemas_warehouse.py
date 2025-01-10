@@ -10,7 +10,7 @@ def warehouseEntity(item)->dict:
     }
 
 def warehouseEntityAll(entity) -> list:
-    return[warehouseEntity(item) for item in entity]
+    return[warehouseEntity(item) for item in entity if item["active"]]
 
 def warehouseEntityUser(item)->dict:
     return{
