@@ -10,16 +10,22 @@ class userCreate(BaseModel):
     warehouse: str
 
 
-class userDB(BaseModel):
-    id:str
+class userUpdate(BaseModel):
+
     name: str
     lastname:str
     email: str
-    passoword:str
-    created:str
-    updated:str
+    warehouse: str
+
+class userUpdateByAdmin(BaseModel):
+
+    name: str
+    lastname:str
+    email: str
     active: bool
     is_admin: bool
+    warehouse: str
+
 
 class userOut(BaseModel):
     id:str
@@ -30,7 +36,7 @@ class userOut(BaseModel):
     updated:str
     active: bool
     is_admin: bool
-    warehouse: Optional[warehouseDB] = Field(None, description="Información de la bodega asociada")
+    warehouse: Optional[warehouseDB] = Field(None, description="")
 
 
 class userAdmin(BaseModel):
@@ -39,3 +45,6 @@ class userAdmin(BaseModel):
     email: str
     password: str
     is_admin: bool
+  
+
+ #  warehouse: Optional[warehouseDB] = Field(None) 

@@ -1,6 +1,6 @@
 from fastapi import APIRouter,HTTPException,Depends
 from fastapi.security import OAuth2PasswordBearer
-from models.user import userCreate,userOut,userDB
+from models.user import userCreate,userOut,userUpdate
 from DataBase.DataBase import users_collection, warehouse_collection
 from datetime import datetime
 from schemas.user import userEntity,usersEntity
@@ -13,7 +13,7 @@ from typing import Annotated
 
 #passlib  pip install passlib
 user= APIRouter()
-load_dotenv()
+
 
 load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -48,10 +48,12 @@ PEPPER = os.getenv("PEPPER")
 
  
 @user.post('/users',tags=["users"])
-async def create_user(user:userCreate,current_user: dict = Depends(admin_required)):
+async def create_user(user:userCreate):
     try:
 
         new_user = user.dict()
+        if users_collection.find_one({"email":new_user["email"]}): 
+            raise HTTPException(status_code=400, detail="Email already exists")
         new_user["password"] = bcrypt.hash(new_user["password"]+ PEPPER)
         new_user['created'] = datetime.utcnow()
         new_user['updated'] = datetime.utcnow()
@@ -76,8 +78,15 @@ async def create_user(user:userCreate,current_user: dict = Depends(admin_require
 
 
 @user.get('/get_users',response_model=list[userOut],tags=["users"])
-async def find_all_user(current_user: dict = Depends(admin_required)):
-    return usersEntity(users_collection.find())
+async def find_all_user(current_user: dict = Depends(decode_token)):
+    try:
+        if current_user["is_admin"] == True:
+            return usersEntity(users_collection.find())
+        else: 
+            id_user = current_user["id"]
+            return usersEntity(users_collection.find({"_id":ObjectId(id_user)}))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @user.get('/user/{id}',tags=["users"])
@@ -88,8 +97,6 @@ async def get_one_user(id:str,current_user: dict = Depends(decode_token)):
         user = find_user(id)
         if not user:
             raise HTTPException(status_code=404,detail="User not found")
-        if user["is_admin"]:
-            raise HTTPException(status_code=403,detail="you are not authorized")
         return userEntity(user)
     except HTTPException as http_exc: 
         raise http_exc
@@ -98,7 +105,7 @@ async def get_one_user(id:str,current_user: dict = Depends(decode_token)):
 
 
 @user.put('/user/{id}',tags=["users"])
-async def update_one_user(id:str,user:userCreate,current_user: dict = Depends(decode_token)):
+async def update_one_user(id:str,user:userUpdate,current_user: dict = Depends(decode_token)):
     if current_user["id"] != id and not current_user["is_admin"]:
         raise HTTPException(status_code=403,detail="You are not authorized")
     user = user.dict()

@@ -11,6 +11,7 @@ from jose import jwt
 from .crud_user import PEPPER
 import os
 from dotenv import load_dotenv
+from DataBase.DataBase import warehouse_collection
 
 
 admin= APIRouter()
@@ -92,11 +93,14 @@ async def create_admin (user:userAdmin, current_user:dict = Depends(admin_requir
         new_user['active']  = True
         new_user['is_admin'] = True
         id = users_collection.insert_one(new_user).inserted_id
-        user = users_collection.find_one({"_id":ObjectId(id)})
+        user = users_collection.find_one({"_id": ObjectId(id)})
         return userEntity(user)
+    except HTTPException as http_exc:
+        raise http_exc
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
+ 
 
 @admin.get('/get_admins',response_model=list[userOut],tags=["admin"])
 async def find_all_admin(current_user:dict = Depends(admin_required)):

@@ -5,6 +5,7 @@ class warehouseCreate(BaseModel):
     address:str
     active: bool
 
+
 class warehouseDB(BaseModel):
     id:str
     name: str
@@ -12,3 +13,6 @@ class warehouseDB(BaseModel):
     created:str
     updated:str
     active: bool
+    adminAsigned: str
+
+

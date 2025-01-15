@@ -6,6 +6,7 @@ def warehouseEntity(item)->dict:
         "created":item["created"],
         "updated":item["updated"],
         "active": item["active"],
+        "adminAsigned":item["adminAsigned"]
 
     }
 
