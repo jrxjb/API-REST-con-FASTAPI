@@ -46,5 +46,11 @@ class userAdmin(BaseModel):
     password: str
     is_admin: bool
   
+class userAdminUpdate(BaseModel):
+    name: str
+    lastname:str
+    email: str
+    is_admin: bool
+    active: bool
 
  #  warehouse: Optional[warehouseDB] = Field(None) 

@@ -3,7 +3,7 @@ from pydantic import BaseModel
 class warehouseCreate(BaseModel):
     name: str
     address:str
-    active: bool
+
 
 
 class warehouseDB(BaseModel):

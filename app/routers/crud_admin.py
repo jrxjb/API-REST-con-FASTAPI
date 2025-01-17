@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Response, HTTPException, Depends, Form
+from fastapi import APIRouter, HTTPException, Depends
 from typing import Annotated
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from models.user import userAdmin, userOut
+from fastapi.security import OAuth2PasswordBearer
+from models.user import userAdmin, userOut,userAdminUpdate
 from DataBase.DataBase import users_collection
 from schemas.user import userEntity, usersEntity
 from datetime import datetime
@@ -87,6 +87,8 @@ def admin_required(current_user: dict = Depends(decode_token),tags=["admin"]):
 async def create_admin (user:userAdmin, current_user:dict = Depends(admin_required)):
     try:
         new_user = user.dict()
+        if users_collection.find_one({"email":new_user["email"]}): 
+         raise HTTPException(status_code=400, detail="Email already exists")
         new_user["password"] = bcrypt.hash(new_user["password"]+ PEPPER)
         new_user['created'] = datetime.utcnow()
         new_user['updated'] = datetime.utcnow()
@@ -106,6 +108,14 @@ async def create_admin (user:userAdmin, current_user:dict = Depends(admin_requir
 async def find_all_admin(current_user:dict = Depends(admin_required)):
     return usersEntity(users_collection.find({"is_admin":True}))
     
+
+
+@admin.put('/user/{id}',tags=["admin"])
+async def update_one_admin(id:str,newAdmin:userAdminUpdate,current_user: dict = Depends(admin_required)):
+    newAdmin = newAdmin.dict()
+    newAdmin['updated'] = datetime.utcnow()
+    user = users_collection.find_one_and_update({"_id":ObjectId(id)},{"$set":dict(user)})
+    return userEntity(user)
 
 
 

@@ -1,0 +1,57 @@
+1) loguear super admin
+2) crear admin y bodega 
+3) admin puede crear items en la boega
+4) poder crear usuario y afiliar bodega 
+5) usuario pude ver items y comprar (se debe descontar) y aparecerle afiliado al usuario
+6) Los usuarios no pueden editar item solo comprar  ni bodegas
+
+**Prueba de seguridad admin
+USERS CRUD
+Warehouse CRUD
+items CRUD
+
+**USERS
+USERS CRUD
+Warehouse CRUD
+items CRUD
+
+----------------
+
+Crear admin
+
+{
+  "name": "new",
+  "lastname": "admin",
+  "email": "newAdming",
+  "password": "newAdmin",
+  "is_admin": true
+}
+
+{
+  "id": "678a9dcccdfc33be95391f74",
+  "name": "new",
+  "lastname": "admin",
+  "email": "newAdming",
+  "created": "2025-01-17T18:13:32.406000",
+  "updated": "2025-01-17T18:13:32.406000",
+  "active": true,
+  "is_admin": true,
+  "warehouse": null
+}
+--------------------------------------------------
+2) crear bodega
+
+{
+  "name": "Bodega charallave",
+  "address": "cale 3 boulevar Evancio Gamez",
+}
+
+{
+  "id": "678a9e7d440241477ea7ba7d",
+  "name": "Bodega charallave",
+  "address": "cale 3 boulevar Evancio Gamez",
+  "created": "2025-01-17T18:16:29.021916",
+  "updated": "2025-01-17T18:16:29.021928",
+  "active": true,
+  "adminAsigned": "678a9dcccdfc33be95391f74"
+}

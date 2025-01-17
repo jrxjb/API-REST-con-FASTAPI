@@ -1,11 +1,15 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional
-from datetime import datetime 
+from datetime import datetime
+from bson import ObjectId
 
 class ItemsCreate(BaseModel):
     brand: str
     model: str
-    features: Optional[List[str]] = []
+    features: Optional[List[str]] = Field(default_factory=list)
+    warehouse: str 
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 class ItemsInDB(BaseModel):
@@ -18,6 +22,7 @@ class ItemsInDB(BaseModel):
     updated:str
     deleted:bool
     features: Optional[List[str]] = []
+    warehouse: Optional[dict] = None
 
 
 

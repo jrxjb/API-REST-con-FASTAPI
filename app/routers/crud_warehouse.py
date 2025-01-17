@@ -48,6 +48,7 @@ def admin_required(current_user: dict = Depends(decode_token)):
 async def create_warehouse(warehouse:warehouseCreate,current_user: dict = Depends(admin_required)):
     try:
         new_warehouse = warehouse.dict()
+        new_warehouse['active'] = True
         new_warehouse['created'] = datetime.utcnow().isoformat()
         new_warehouse['updated'] = datetime.utcnow().isoformat()
         admin_id=current_user.get("id")
@@ -57,6 +58,8 @@ async def create_warehouse(warehouse:warehouseCreate,current_user: dict = Depend
         if not warehouse:
             raise HTTPException(status_code=404,detail="Warehouse not found")
         return warehouseEntity(warehouse)
+    except HTTPException as http_exc: 
+        raise http_exc
     except Exception as e:
         raise HTTPException(status_code=500,detail=str(e))
     
@@ -88,12 +91,17 @@ async def get_warehouse():
 @warehouse.put('/warehouse/{id}',tags=["warehouse"])
 async def put_one_warehouse(id:str,warehouse_D: warehouseCreate,current_user: dict = Depends(admin_required)):
     try:
-        warehouse=warehouse_D.dict()
-        warehouse['updated'] = datetime.utcnow().isoformat()
-        warehouse = warehouse_collection.find_one_and_update({"_id":ObjectId(id)},{"$set":dict(warehouse)},return_document=True)
+        warehouse=warehouse_collection.find_one({"_id":ObjectId(id)})
         if not warehouse:
-            raise HTTPException(status_code=404,detail="Warehouse not found")   
+            raise HTTPException(status_code=404,detail="Warehouse not found")
+        if (warehouse['active'] == False):
+            return HTTPException(status_code=404, detail=str("Deleted"))
+        warehouse=warehouse_D.dict()
+        warehouse['updated'] = datetime.utcnow().isoformat()  
+        warehouse = warehouse_collection.find_one_and_update({"_id":ObjectId(id)},{"$set":dict(warehouse)},return_document=True)
         return warehouseEntity(warehouse)
+    except HTTPException as http_exc: 
+        raise http_exc
     except Exception as e:  
         raise HTTPException(status_code=500,detail=str(e))
 
@@ -107,6 +115,8 @@ async def delete_one_warehouse(id:str,current_user: dict = Depends(admin_require
         warehouse['updated'] = datetime.utcnow().isoformat()
         warehouse_collection.find_one_and_update({"_id": ObjectId(id)}, {"$set": warehouse})
         return warehouseEntity(warehouse)
+    except HTTPException as http_exc: 
+        raise http_exc
     except Exception as e:  
         raise HTTPException(status_code=500,detail=str(e))
 

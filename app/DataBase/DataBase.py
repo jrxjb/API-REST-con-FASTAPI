@@ -17,3 +17,4 @@ db = conn[DATABASE_NAME]
 users_collection = db[COLLECTION_NAME]
 item_collection = db[COLLECTION_ITEM]
 warehouse_collection = db[COLLECTION_WAREHOUSE]
+
