@@ -52,17 +52,17 @@ async def create_warehouse(warehouse:warehouseCreate,current_user: dict = Depend
         new_warehouse['created'] = datetime.utcnow().isoformat()
         new_warehouse['updated'] = datetime.utcnow().isoformat()
         admin_id=current_user.get("id")
-        new_warehouse['adminAsigned'] = admin_id
+        new_warehouse['adminAsigned'] = ObjectId(admin_id)
         id   = warehouse_collection.insert_one(new_warehouse).inserted_id
         warehouse = warehouse_collection.find_one({"_id":ObjectId(id)})
         if not warehouse:
             raise HTTPException(status_code=404,detail="Warehouse not found")
+
         return warehouseEntity(warehouse)
     except HTTPException as http_exc: 
         raise http_exc
     except Exception as e:
         raise HTTPException(status_code=500,detail=str(e))
-    
 
 
 @warehouse.get('/warehouse{id}',tags=["warehouse"])

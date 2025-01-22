@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi.security import OAuth2PasswordBearer
 from models.user import userAdmin, userOut,userAdminUpdate
 from DataBase.DataBase import users_collection
-from schemas.user import userEntity, usersEntity
+from schemas.user import userEntity, usersEntity,userAdminEntity,usersAdminEntity
 from datetime import datetime
 from bson import ObjectId
 from passlib.hash import bcrypt
@@ -106,7 +106,8 @@ async def create_admin (user:userAdmin, current_user:dict = Depends(admin_requir
 
 @admin.get('/get_admins',response_model=list[userOut],tags=["admin"])
 async def find_all_admin(current_user:dict = Depends(admin_required)):
-    return usersEntity(users_collection.find({"is_admin":True}))
+    admin= users_collection.find({"is_admin":True})
+    return usersAdminEntity(admin)
     
 
 

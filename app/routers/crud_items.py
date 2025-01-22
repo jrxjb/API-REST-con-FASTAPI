@@ -50,18 +50,25 @@ def admin_required(current_user: dict = Depends(decode_token),tags=["admin"]):
  
 @items.post('/items')
 async def create_Item(item:ItemsCreate ,currente_user:dict = Depends(admin_required)):
-
-    new_item = item.dict()
-    new_item['created'] = datetime.utcnow().isoformat()
-    new_item['updated'] = datetime.utcnow().isoformat()
-    new_item['deleted'] = False
-    new_item['sold_date'] = None
-    new_item['out_of_stock'] = False
-    new_item['warehouseid'] = ObjectId(item.warehouse)
-    id   = item_collection.insert_one(new_item).inserted_id
-    item = item_collection.find_one({"_id":ObjectId(id)})
-    return  itemAdminEntity(item)
-
+    try:
+        new_item = item.dict()
+        new_item['created'] = datetime.utcnow().isoformat()
+        new_item['updated'] = datetime.utcnow().isoformat()
+        new_item['deleted'] = False
+        new_item['sold_date'] = None
+        new_item['out_of_stock'] = False
+        new_item['warehouseid'] = ObjectId(item.warehouse)
+        if not item.warehouse:
+            raise HTTPException(status_code=404, detail="Warehouse not found")
+        id   = item_collection.insert_one(new_item).inserted_id
+        item = item_collection.find_one({"_id":ObjectId(id)})
+        item['_id'] = str(item['_id']) 
+        item['warehouseid'] = str(item['warehouseid'])
+        return  itemAdminEntity(item)
+    except HTTPException as http_exc: 
+        raise http_exc
+    except Exception as e:
+        raise HTTPException(status_code=500,detail=str(e))
 ########################################################
 
 @items.get('/items',response_model=List[ItemsInDB])

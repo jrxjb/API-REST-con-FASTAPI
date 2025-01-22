@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional,List
 from models.warehouse import warehouseDB
 
 class userCreate(BaseModel):
@@ -36,7 +36,7 @@ class userOut(BaseModel):
     updated:str
     active: bool
     is_admin: bool
-    warehouse: Optional[warehouseDB] = Field(None, description="")
+    warehouse: Optional[List[warehouseDB]] = Field(None, description="")
 
 
 class userAdmin(BaseModel):

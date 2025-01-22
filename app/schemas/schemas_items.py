@@ -8,7 +8,7 @@ def get_warehouse_by_id(warehouse: str) -> dict:
             "id": str(warehouse["_id"]),
             "name": warehouse["name"],
             "address": warehouse["address"],
-            "adminAsigned": warehouse["adminAsigned"]
+            "adminAsigned": str(warehouse["adminAsigned"])
         }
     return {}
 
@@ -16,7 +16,7 @@ def get_warehouse_by_id(warehouse: str) -> dict:
 
 
 def itemAdminEntity(item)->dict:
-    warehouse_info = get_warehouse_by_id(item["warehouse"])
+    warehouse_info = get_warehouse_by_id(str(item["warehouse"]))
     return{
         "id":str(item["_id"]),
         "brand":str(item["brand"]),

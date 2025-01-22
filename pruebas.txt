@@ -22,18 +22,40 @@ Crear admin
 {
   "name": "new",
   "lastname": "admin",
-  "email": "newAdming",
-  "password": "newAdmin",
+  "email": "admin0@gmail.com",
+  "password": "admin0",
   "is_admin": true
 }
 
 {
-  "id": "678a9dcccdfc33be95391f74",
+  "id": "678ea9fc7f95a3f1e334718d",
   "name": "new",
   "lastname": "admin",
-  "email": "newAdming",
-  "created": "2025-01-17T18:13:32.406000",
-  "updated": "2025-01-17T18:13:32.406000",
+  "email": "admin0@gmail.com",
+  "created": "2025-01-20T19:54:36.522000",
+  "updated": "2025-01-20T19:54:36.522000",
+  "active": true,
+  "is_admin": true,
+  "warehouse": null
+}
+
+otro admin 
+
+{
+  "name": "admin1",
+  "lastname": "a",
+  "email": "admin1@gmail.com",
+  "password": "admin",
+  "is_admin": true
+}
+
+{
+  "id": "678eaa307f95a3f1e334718e",
+  "name": "admin1",
+  "lastname": "a",
+  "email": "admin1@gmail.com",
+  "created": "2025-01-20T19:55:28.570000",
+  "updated": "2025-01-20T19:55:28.570000",
   "active": true,
   "is_admin": true,
   "warehouse": null
@@ -41,17 +63,56 @@ Crear admin
 --------------------------------------------------
 2) crear bodega
 
+
 {
-  "name": "Bodega charallave",
-  "address": "cale 3 boulevar Evancio Gamez",
+  "name": "warehouses chacaravale III",
+  "address": "miranda/charallave"
 }
 
 {
-  "id": "678a9e7d440241477ea7ba7d",
-  "name": "Bodega charallave",
-  "address": "cale 3 boulevar Evancio Gamez",
-  "created": "2025-01-17T18:16:29.021916",
-  "updated": "2025-01-17T18:16:29.021928",
+  "id": "678eaa817f95a3f1e334718f",
+  "name": "warehouses chacaravale III",
+  "address": "miranda/charallave",
+  "created": "2025-01-20T19:56:49.442577",
+  "updated": "2025-01-20T19:56:49.442585",
   "active": true,
-  "adminAsigned": "678a9dcccdfc33be95391f74"
+  "adminAsigned": {
+    "id": "678ea9fc7f95a3f1e334718d",
+    "name": "new",
+    "lastname": "admin",
+    "email": "admin0@gmail.com"
+  }
+}
+
+3.2)crear Item 
+
+{
+  "brand": "TCL2",
+  "model": "Tv",
+  "features": [
+    "32 inches",
+     "android"
+  ],
+  "warehouse": "678eaa817f95a3f1e334718f"
+}
+
+{
+  "id": "678ead9b9fbf32e4c15b7c80",
+  "brand": "TCL2",
+  "model": "Tv",
+  "sold_date": null,
+  "out_of_stock": false,
+  "created": "2025-01-20T20:10:03.520126",
+  "updated": "2025-01-20T20:10:03.520134",
+  "deleted": false,
+  "features": [
+    "32 inches",
+    "android"
+  ],
+  "warehouse": {
+    "id": "678eaa817f95a3f1e334718f",
+    "name": "warehouses chacaravale III",
+    "address": "miranda/charallave",
+    "adminAsigned": "678ea9fc7f95a3f1e334718d"
+  }
 }
