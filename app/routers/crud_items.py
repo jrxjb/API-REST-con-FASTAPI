@@ -44,9 +44,7 @@ def admin_required(current_user: dict = Depends(decode_token),tags=["admin"]):
     return current_user
 
 ##################################
-
-###################################
-
+#POST
  
 @items.post('/items')
 async def create_Item(item:ItemsCreate ,currente_user:dict = Depends(admin_required)):
@@ -70,54 +68,67 @@ async def create_Item(item:ItemsCreate ,currente_user:dict = Depends(admin_requi
     except Exception as e:
         raise HTTPException(status_code=500,detail=str(e))
 ########################################################
+#GET
 
 @items.get('/items',response_model=List[ItemsInDB])
 async def get_items():
-    item = item_collection.find()
-    items = list(item)
-    return itemADminEntityAll(items)
-
-
-
-
-"""
-
-@user.get('/get_users',response_model=list[userOut],tags=["users"])
-async def find_all_user(current_user: dict = Depends(decode_token)):
     try:
-        if current_user["is_admin"] == True:
-            return usersEntity(users_collection.find())
-        else: 
-            id_user = current_user["id"]
-            return usersEntity(users_collection.find({"_id":ObjectId(id_user)}))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-
-"""
-
+        item = item_collection.find()
+        items = list(item)
+        return itemADminEntityAll(items)
+    except Exception as e:  
+        raise HTTPException(status_code=404,detail=str(e))
 
 
 @items.get('/items/{id}')
 async def get_one_item(id:str):
-    item=item_collection.find_one({"_id":ObjectId(id)})
-    if (item['deleted'] == True):
-        return HTTPException(status_code=404, detail=str("Deleted"))
-    return itemAdminEntity(item)
+    try:
+        item=item_collection.find_one({"_id":ObjectId(id)})
+        if (item['deleted'] == True):
+            return HTTPException(status_code=404, detail=str("Deleted"))
+        return itemAdminEntity(item)
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise HTTPException(status_code=500,detail=str(e))
+
+
+##############################################################
+#PUT
 
 @items.put('/items/{id}')
-async def put_one_item(id:str,item:ItemsUser):
-    item=item.dict()
-    item['updated'] = datetime.utcnow().isoformat()
-    item = item_collection.find_one_and_update({"_id":ObjectId(id)},{"$set":dict(item)},return_document=True)
-    return itemAdminEntity(item)
+async def put_one_item(id:str,item:ItemsUser,currente_user:dict = Depends(admin_required)):
+    try:
+        item_query = item_collection.find_one({"_id":ObjectId(id)})
+        if not item_query:
+            raise HTTPException(status_code=404,detail="Item not found")
+        if (item_query['deleted']==True):
+            raise HTTPException(status_code=404,detail="deleted")
+        updated_data=item.dict()
+        updated_data['updated'] = datetime.utcnow().isoformat()
+        updated_data = item_collection.find_one_and_update({"_id":ObjectId(id)},{"$set":dict(item)},return_document=True)
+        return itemAdminEntity(item)
+    except HTTPException as http_exc: 
+        raise http_exc
+    except Exception as e:  
+        raise HTTPException(status_code=404,detail=str(e))
     
-
+##############################################################
+#DELETE
 @items.delete('/items/{id}')
-def delete_one_item(id:str):
-    item=item_collection.find_one({"_id":ObjectId(id)})
-    item['deleted'] = True
-    item['updated'] = datetime.utcnow().isoformat()
-    item_collection.update_one({"_id": ObjectId(id)}, {"$set": item})
-    return itemAdminEntity(item)
+def delete_one_item(id:str,currente_user:dict = Depends(admin_required)):
+    try:
+        item=item_collection.find_one({"_id":ObjectId(id)})
+        if not item:
+            raise HTTPException(status_code=404,detail="Item not found")
+        if (item['deleted']==True):
+            raise HTTPException(status_code=404,detail="Item already deleted")
+        item['deleted'] = True
+        item['updated'] = datetime.utcnow().isoformat()
+        item_collection.update_one({"_id": ObjectId(id)}, {"$set": item})
+        return {"message": "Item deleted successfully"}
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise HTTPException(status_code=500,detail=str(e))
+

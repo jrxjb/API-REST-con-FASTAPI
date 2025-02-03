@@ -40,10 +40,6 @@ def admin_required(current_user: dict = Depends(decode_token)):
 ###################
 
 
-
-
-
-
 @warehouse.post('/warehouse',tags=["warehouse"])
 async def create_warehouse(warehouse:warehouseCreate,current_user: dict = Depends(admin_required)):
     try:
@@ -66,7 +62,7 @@ async def create_warehouse(warehouse:warehouseCreate,current_user: dict = Depend
 
 
 @warehouse.get('/warehouse{id}',tags=["warehouse"])
-async def get_one_warehouse(id:str):
+async def get_one_warehouse(id:str,current_user: dict = Depends(decode_token)):
     try:
         warehouse=warehouse_collection.find_one({"_id":ObjectId(id)})
         if (warehouse['active'] == False):
@@ -78,7 +74,7 @@ async def get_one_warehouse(id:str):
         raise HTTPException(status_code=500,detail=str(e))
 
 @warehouse.get('/warehouse',tags=["warehouse"])
-async def get_warehouse():
+async def get_warehouse(current_user: dict = Depends(decode_token)):
     try:
         warehouse = warehouse_collection.find()
         if warehouse is None:
@@ -111,10 +107,12 @@ async def delete_one_warehouse(id:str,current_user: dict = Depends(admin_require
         warehouse=warehouse_collection.find_one({"_id":ObjectId(id)})
         if not warehouse:
             raise HTTPException(status_code=404,detail="Warehouse not found")
+        if (warehouse['active'] == False):
+            return HTTPException(status_code=404, detail=str("warehouse already deleted"))
         warehouse['active'] = False
         warehouse['updated'] = datetime.utcnow().isoformat()
         warehouse_collection.find_one_and_update({"_id": ObjectId(id)}, {"$set": warehouse})
-        return warehouseEntity(warehouse)
+        return {"message": "warehouse deleted successfully"}
     except HTTPException as http_exc: 
         raise http_exc
     except Exception as e:  

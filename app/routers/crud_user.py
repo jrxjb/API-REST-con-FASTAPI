@@ -9,7 +9,7 @@ from passlib.hash import bcrypt
 import os 
 from dotenv import load_dotenv
 from jose import jwt
-from typing import Annotated
+from typing import Annotated,List
 
 #passlib  pip install passlib
 user= APIRouter()
@@ -76,19 +76,20 @@ async def create_user(user:userCreate):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
-@user.get('/get_users',response_model=list[userOut],tags=["users"])
+ 
+@user.get('/get_users', response_model=List[userOut], tags=["users"])
 async def find_all_user(current_user: dict = Depends(decode_token)):
     try:
-        if current_user["is_admin"] == True:
+        if current_user["is_admin"]:
             return usersEntity(users_collection.find())
-        else: 
+        else:
             id_user = current_user["id"]
-            return usersEntity(users_collection.find({"_id":ObjectId(id_user)}))
+            user = get_one_user(id_user)
+            return user
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    
 @user.get('/user/{id}',tags=["users"])
 async def get_one_user(id:str,current_user: dict = Depends(decode_token)):
     try:

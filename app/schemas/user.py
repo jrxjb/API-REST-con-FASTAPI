@@ -3,11 +3,18 @@ from DataBase.DataBase import warehouse_collection
 from bson import ObjectId
 
 def userEntity(item) -> dict:
-    if item.get("warehouse"):
-        warehouse_info = get_warehouse(str(item["_id"]))
-    else:
-        warehouse_info = None
-
+    warehouse_info = []
+    if item.get("warehouse") and isinstance(item["warehouse"], dict):
+        warehouse_info = [{
+            "id": str(item["warehouse"].get("_id", "")),
+            "name": item["warehouse"].get("name", ""),
+            "address": item["warehouse"].get("address", ""),
+            "created": item["warehouse"].get("created", ""),
+            "updated": item["warehouse"].get("updated", ""),
+            "active": item["warehouse"].get("active", False),
+            "adminAsigned": str(item["warehouse"].get("adminAsigned", ""))
+        }]
+    
     return {
         "id": str(item["_id"]),
         "name": item["name"],
@@ -20,7 +27,7 @@ def userEntity(item) -> dict:
         "warehouse": warehouse_info
     }
 
-
+ 
 
 
 def usersEntity(entity) -> list:
@@ -38,7 +45,12 @@ def userEntityUpdate(item) -> list:
         "is_admin":item["is_admin"]
     }
 
-
+def get_warehouses_for_user(user_warehouse: str) -> list:
+    try:
+        warehouse = warehouse_collection.find({"_id": ObjectId(user_warehouse)})
+    except Exception as e:
+        return []
+    return [warehouseEntity(item) for item in warehouse]
 
 def get_warehouse(admin_warehouse: str) -> list:
     warehouses = warehouse_collection.find({"adminAsigned": ObjectId(admin_warehouse)})

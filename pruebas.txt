@@ -5,6 +5,14 @@
 5) usuario pude ver items y comprar (se debe descontar) y aparecerle afiliado al usuario
 6) Los usuarios no pueden editar item solo comprar  ni bodegas
 
+USERS no esa listo, manejo de errores y consltar en la base antes e editar o borrar, 
+no muestra la warehouses asociada al cliente 
+
+si se bora la warehosues no deberian salir los clientes de esa warehouse
+
+
+
+
 **Prueba de seguridad admin
 USERS CRUD
 Warehouse CRUD
@@ -28,12 +36,12 @@ Crear admin
 }
 
 {
-  "id": "678ea9fc7f95a3f1e334718d",
+  "id": "679bcb82a44cb2395e17e322",
   "name": "new",
   "lastname": "admin",
   "email": "admin0@gmail.com",
-  "created": "2025-01-20T19:54:36.522000",
-  "updated": "2025-01-20T19:54:36.522000",
+  "created": "2025-01-30T18:57:06.488000",
+  "updated": "2025-01-30T18:57:06.488000",
   "active": true,
   "is_admin": true,
   "warehouse": null
@@ -49,19 +57,35 @@ otro admin
   "is_admin": true
 }
 
-{
-  "id": "678eaa307f95a3f1e334718e",
-  "name": "admin1",
-  "lastname": "a",
-  "email": "admin1@gmail.com",
-  "created": "2025-01-20T19:55:28.570000",
-  "updated": "2025-01-20T19:55:28.570000",
-  "active": true,
-  "is_admin": true,
-  "warehouse": null
-}
+
 --------------------------------------------------
 2) crear bodega
+
+{
+  "name": "Ropa mexico",
+  "address": "mexico, nuevo mexico, calle 14"
+}
+
+
+
+{
+  "id": "679bcc41a44cb2395e17e323",
+  "name": "Ropa mexico",
+  "address": "mexico, nuevo mexico, calle 14",
+  "created": "2025-01-30T19:00:17.636592",
+  "updated": "2025-01-30T19:00:17.636601",
+  "active": true,
+  "adminAsigned": {
+    "id": "679bcb82a44cb2395e17e322",
+    "name": "new",
+    "lastname": "admin",
+    "email": "admin0@gmail.com",
+    "active": true
+  },
+  "items": []
+}
+
+
 
 
 {
@@ -69,20 +93,7 @@ otro admin
   "address": "miranda/charallave"
 }
 
-{
-  "id": "678eaa817f95a3f1e334718f",
-  "name": "warehouses chacaravale III",
-  "address": "miranda/charallave",
-  "created": "2025-01-20T19:56:49.442577",
-  "updated": "2025-01-20T19:56:49.442585",
-  "active": true,
-  "adminAsigned": {
-    "id": "678ea9fc7f95a3f1e334718d",
-    "name": "new",
-    "lastname": "admin",
-    "email": "admin0@gmail.com"
-  }
-}
+
 
 3.2)crear Item 
 
@@ -93,26 +104,89 @@ otro admin
     "32 inches",
      "android"
   ],
-  "warehouse": "678eaa817f95a3f1e334718f"
+  "warehouse": ""
+}
+
+
+
+
+
+{
+  "brand": "tlc",
+  "model": "Tv",
+  "features": [
+    "32 pulgadas,negro, lcd"
+  ],
+  "warehouse": "679bcc41a44cb2395e17e323"
 }
 
 {
-  "id": "678ead9b9fbf32e4c15b7c80",
-  "brand": "TCL2",
+  "id": "679bcceda44cb2395e17e324",
+  "brand": "tlc",
   "model": "Tv",
   "sold_date": null,
   "out_of_stock": false,
-  "created": "2025-01-20T20:10:03.520126",
-  "updated": "2025-01-20T20:10:03.520134",
+  "created": "2025-01-30T19:03:09.556760",
+  "updated": "2025-01-30T19:03:09.556786",
   "deleted": false,
   "features": [
-    "32 inches",
-    "android"
+    "32 pulgadas,negro, lcd"
   ],
   "warehouse": {
-    "id": "678eaa817f95a3f1e334718f",
-    "name": "warehouses chacaravale III",
-    "address": "miranda/charallave",
-    "adminAsigned": "678ea9fc7f95a3f1e334718d"
+    "id": "679bcc41a44cb2395e17e323",
+    "name": "Ropa mexico",
+    "address": "mexico, nuevo mexico, calle 14",
+    "adminAsigned": "679bcb82a44cb2395e17e322"
   }
+}
+
+{
+  "brand": "infinix",
+  "model": "celular",
+  "features": [
+    "7 pulgadas,verde metalico, 64 megapixeles"
+  ],
+  "warehouse": "679bcc41a44cb2395e17e323"
+}
+
+{
+  "id": "679bcd5fa44cb2395e17e325",
+  "brand": "infinix",
+  "model": "celular",
+  "sold_date": null,
+  "out_of_stock": false,
+  "created": "2025-01-30T19:05:03.159783",
+  "updated": "2025-01-30T19:05:03.159790",
+  "deleted": false,
+  "features": [
+    "7 pulgadas,verde metalico, 64 megapixeles"
+  ],
+  "warehouse": {
+    "id": "679bcc41a44cb2395e17e323",
+    "name": "Ropa mexico",
+    "address": "mexico, nuevo mexico, calle 14",
+    "adminAsigned": "679bcb82a44cb2395e17e322"
+  }
+}
+
+4) CREAR USERS
+
+{
+  "name": "user1",
+  "lastname": "u1",
+  "email": "user1@gmail.com",
+  "password": "user1",
+  "warehouse": "679bcc41a44cb2395e17e323"
+}
+
+{
+  "id": "679bdad6ded6d02750758bf4",
+  "name": "user1",
+  "lastname": "u1",
+  "email": "user1@gmail.com",
+  "created": "2025-01-30T20:02:30.563000",
+  "updated": "2025-01-30T20:02:30.563000",
+  "active": true,
+  "is_admin": false,
+  "warehouse": []
 }
