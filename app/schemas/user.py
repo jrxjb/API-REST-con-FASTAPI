@@ -6,7 +6,7 @@ def userEntity(item) -> dict:
     warehouse_info = []
     if item.get("warehouse") and isinstance(item["warehouse"], dict):
         warehouse_info = [{
-            "id": str(item["warehouse"].get("_id", "")),
+            "id": str(item["warehouse"].get("_id")),
             "name": item["warehouse"].get("name", ""),
             "address": item["warehouse"].get("address", ""),
             "created": item["warehouse"].get("created", ""),
@@ -33,7 +33,6 @@ def userEntity(item) -> dict:
 def usersEntity(entity) -> list:
     return[userEntity(item) for item in entity if item ["active"]]
 
-#    "warehouse": str(item["warehouse"]) if item.get("warehouse") else None
 def userEntityUpdate(item) -> list:
     return{
         "id":str(item["_id"]),
@@ -65,7 +64,7 @@ def get_warehouse(admin_warehouse: str) -> list:
         }
     for warehouse in warehouses]
 
-
+ 
 
 def userAdminEntity(item) -> dict:
     warehouse_info = get_warehouse(str(item["_id"])) 

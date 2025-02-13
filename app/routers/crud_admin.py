@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends
 from typing import Annotated
 from fastapi.security import OAuth2PasswordBearer
-from models.user import userAdmin, userOut,userAdminUpdate
+from models.user import userAdmin, userOut,userAdminUpdate,userUpdateByAdmin
 from DataBase.DataBase import users_collection
-from schemas.user import userEntity, usersEntity,userAdminEntity,usersAdminEntity
+from schemas.user import userEntity,userAdminEntity,usersAdminEntity
 from datetime import datetime
 from bson import ObjectId
 from passlib.hash import bcrypt
@@ -12,7 +12,9 @@ from .crud_user import PEPPER
 import os
 from dotenv import load_dotenv
 from DataBase.DataBase import warehouse_collection
+from pymongo import ReturnDocument
 
+# creo que no se usa userUpdateByAdmin
 
 admin= APIRouter()
 load_dotenv()
@@ -49,7 +51,7 @@ def find_user(id):
 PEPPER = os.getenv("PEPPER")
 admin_email = os.getenv("ADMIN_EMAIL")
 admin_password = os.getenv("ADMIN_PASSWORD")
-
+ 
 
 #admin startup
 
@@ -103,21 +105,32 @@ async def create_admin (user:userAdmin, current_user:dict = Depends(admin_requir
         raise HTTPException(status_code=500, detail=str(e))
     
  
-
 @admin.get('/get_admins',response_model=list[userOut],tags=["admin"])
 async def find_all_admin(current_user:dict = Depends(admin_required)):
     admin= users_collection.find({"is_admin":True})
     return usersAdminEntity(admin)
-    
 
 
-@admin.put('/user/{id}',tags=["admin"])
-async def update_one_admin(id:str,newAdmin:userAdminUpdate,current_user: dict = Depends(admin_required)):
-    newAdmin = newAdmin.dict()
-    newAdmin['updated'] = datetime.utcnow()
-    user = users_collection.find_one_and_update({"_id":ObjectId(id)},{"$set":dict(user)})
-    return userEntity(user)
+def updated(id: str, newAdmin2: dict):
+    user = users_collection.find_one_and_update(
+        {"_id": ObjectId(id)},
+        {"$set": newAdmin2},
+        return_document=ReturnDocument.AFTER
+    )
+    return user
 
+
+@admin.put('/user/{id}', tags=["admin"])
+async def update_one_admin(id: str, newAdmin: userAdminUpdate, current_user: dict = Depends(admin_required)):
+    try:
+        newAdmin2 = newAdmin.dict(exclude_unset=True)
+        newAdmin2['updated'] = datetime.utcnow()
+        user = updated(id, newAdmin2)
+        if user is None:
+            raise HTTPException(status_code=404, detail="User not found")
+        return userAdminEntity(user)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @admin.delete('/delete_admin{id}',tags=["admin"])
@@ -129,4 +142,3 @@ async def delete_admin(id:str,current_user:dict = Depends(admin_required)):
     user['updated'] = datetime.utcnow()
     user = users_collection.find_one_and_update({"_id":ObjectId(id)},{"$set":dict(user)})
     return userEntity(user)
-    

@@ -71,7 +71,7 @@ async def create_Item(item:ItemsCreate ,currente_user:dict = Depends(admin_requi
 #GET
 
 @items.get('/items',response_model=List[ItemsInDB])
-async def get_items():
+async def get_items(currente_user:dict = Depends(decode_token)):
     try:
         item = item_collection.find()
         items = list(item)
@@ -81,7 +81,7 @@ async def get_items():
 
 
 @items.get('/items/{id}')
-async def get_one_item(id:str):
+async def get_one_item(id:str,currente_user:dict = Depends(decode_token)):
     try:
         item=item_collection.find_one({"_id":ObjectId(id)})
         if (item['deleted'] == True):

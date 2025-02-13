@@ -8,6 +8,9 @@ from passlib.hash import bcrypt
 from.crud_user import PEPPER
 import os 
 from dotenv import load_dotenv
+from schemas.user import userEntity,userAdminEntity,usersAdminEntity
+from bson import ObjectId
+from models.user import userAdmin
 
 
 
@@ -32,7 +35,10 @@ def decode_token(token:Annotated[str,Depends(OAuth2_scheme)])->dict:
     user = users_collection.find_one({"email": email})
     if user is None: 
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
-    return userEntity(user)
+    user_data = userEntity(user) 
+    return user_data
+
+
 
 @appL.post('/token',tags=["users"])
 async def login(form_data: Annotated[OAuth2PasswordRequestForm,Depends()]):
@@ -42,7 +48,17 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm,Depends()]):
     token = encode_token({"username":user["name"], "email":user["email"]})
     return {"access_token":token}
 
+def find_user(id):
+    return users_collection.find_one({'_id':ObjectId(id)})
 
-@appL.get('/users/profile',tags=["users"])
-async def profile(my_user:Annotated[dict, Depends(decode_token)]):
-    return my_user
+
+@appL.get('/users/profile', tags=["users"])
+async def profile(my_user: Annotated[dict, Depends(decode_token)]):
+    id = my_user['id']
+    user = find_user(id)
+    if user['is_admin']:
+        return userAdminEntity(user)
+    else:
+        return userEntity(user)
+
+

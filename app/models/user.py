@@ -52,5 +52,4 @@ class userAdminUpdate(BaseModel):
     email: str
     is_admin: bool
     active: bool
-
- #  warehouse: Optional[warehouseDB] = Field(None) 
+    warehouse: Optional[str] = Field(None,description= "leave blank ", example="leave blank")

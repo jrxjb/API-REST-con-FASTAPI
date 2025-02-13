@@ -82,10 +82,6 @@ async def find_all_user(current_user: dict = Depends(decode_token)):
     try:
         if current_user["is_admin"]:
             return usersEntity(users_collection.find())
-        else:
-            id_user = current_user["id"]
-            user = get_one_user(id_user)
-            return user
     except Exception as e:
         raise HTTPException(status_code=404, detail="User not found")
     

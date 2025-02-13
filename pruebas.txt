@@ -28,25 +28,23 @@ items CRUD
 Crear admin
 
 {
-  "name": "new",
+  "name": "admin1",
   "lastname": "admin",
   "email": "admin0@gmail.com",
   "password": "admin0",
   "is_admin": true
 }
-
 {
-  "id": "679bcb82a44cb2395e17e322",
-  "name": "new",
+  "id": "67a537ba436b095d9bf0ee7f",
+  "name": "admin1",
   "lastname": "admin",
   "email": "admin0@gmail.com",
-  "created": "2025-01-30T18:57:06.488000",
-  "updated": "2025-01-30T18:57:06.488000",
+  "created": "2025-02-06T22:29:14.722000",
+  "updated": "2025-02-06T22:29:14.722000",
   "active": true,
   "is_admin": true,
-  "warehouse": null
+  "warehouse": []
 }
-
 otro admin 
 
 {
