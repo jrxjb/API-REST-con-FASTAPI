@@ -8,7 +8,7 @@ from passlib.hash import bcrypt
 from.crud_user import PEPPER
 import os 
 from dotenv import load_dotenv
-from schemas.user import userEntity,userAdminEntity,usersAdminEntity
+from schemas.user import userEntity,userAdminEntity
 from bson import ObjectId
 from models.user import userAdmin
 

@@ -1,11 +1,11 @@
 from fastapi import APIRouter,HTTPException,Depends
-from models.warehouse import  warehouseCreate
+from models.warehouse import warehouseCreate
 from datetime import datetime
 from DataBase.DataBase import warehouse_collection, users_collection
 from bson import ObjectId
 from schemas.schemas_warehouse import warehouseEntity,warehouseEntityAll
 from dotenv import load_dotenv
-from fastapi.security import OAuth2PasswordBearer   
+from fastapi.security import OAuth2PasswordBearer
 import os 
 from typing import Annotated
 from jose import jwt
@@ -115,6 +115,6 @@ async def delete_one_warehouse(id:str,current_user: dict = Depends(admin_require
         return {"message": "warehouse deleted successfully"}
     except HTTPException as http_exc: 
         raise http_exc
-    except Exception as e:  
+    except Exception as e:
         raise HTTPException(status_code=500,detail=str(e))
 

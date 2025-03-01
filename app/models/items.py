@@ -1,7 +1,6 @@
 from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional
 from datetime import datetime
-from bson import ObjectId
 
 class ItemsCreate(BaseModel):
     brand: str

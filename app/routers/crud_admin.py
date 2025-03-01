@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from typing import Annotated
 from fastapi.security import OAuth2PasswordBearer
-from models.user import userAdmin, userOut,userAdminUpdate,userUpdateByAdmin
+from models.user import userAdmin, userOut,userAdminUpdate
 from DataBase.DataBase import users_collection
 from schemas.user import userEntity,userAdminEntity,usersAdminEntity
 from datetime import datetime
@@ -11,10 +11,7 @@ from jose import jwt
 from .crud_user import PEPPER
 import os
 from dotenv import load_dotenv
-from DataBase.DataBase import warehouse_collection
 from pymongo import ReturnDocument
-
-# creo que no se usa userUpdateByAdmin
 
 admin= APIRouter()
 load_dotenv()
@@ -103,7 +100,7 @@ async def create_admin (user:userAdmin, current_user:dict = Depends(admin_requir
         raise http_exc
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+
  
 @admin.get('/get_admins',response_model=list[userOut],tags=["admin"])
 async def find_all_admin(current_user:dict = Depends(admin_required)):

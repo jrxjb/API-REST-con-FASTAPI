@@ -27,9 +27,6 @@ def userEntity(item) -> dict:
         "warehouse": warehouse_info
     }
 
- 
-
-
 def usersEntity(entity) -> list:
     return[userEntity(item) for item in entity if item ["active"]]
 
@@ -80,9 +77,6 @@ def userAdminEntity(item) -> dict:
         "is_admin": item["is_admin"],
         "warehouse": warehouse_info if warehouse_info else None
     }
-
-
-
 
 def usersAdminEntity(entity) -> list:
     return[userAdminEntity(item) for item in entity if item ["active"]]

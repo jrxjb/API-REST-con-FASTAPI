@@ -118,8 +118,3 @@ async def delete_one_user_bool(id:str,current_user: dict = Depends(admin_require
     user['updated'] = datetime.utcnow()
     user = users_collection.find_one_and_update({"_id":ObjectId(id)},{"$set":dict(user)})
     return userEntity(user)
-
-
-
-
-#uvicorn main:app --reload

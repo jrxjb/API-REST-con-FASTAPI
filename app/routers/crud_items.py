@@ -1,18 +1,17 @@
-from fastapi import APIRouter,HTTPException,Depends,Body
+from fastapi import APIRouter,HTTPException,Depends
 from models.items import ItemsCreate,ItemsInDB,ItemsUser
 from datetime import datetime
-from DataBase.DataBase import item_collection,users_collection,warehouse_collection
+from DataBase.DataBase import item_collection,users_collection
 from bson import ObjectId
 from schemas.schemas_items import itemAdminEntity,itemADminEntityAll
 from schemas.user import userEntity
-from typing import Union,List
+from typing import List
 ####
 from dotenv import load_dotenv
 from fastapi.security import OAuth2PasswordBearer
 import os
 from typing import Annotated
 from jose import jwt 
-
 
 
 items = APIRouter()
